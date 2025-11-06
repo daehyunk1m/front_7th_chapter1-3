@@ -14,7 +14,7 @@ import { FixtureName, TestFixture } from '../fixtures/types';
  */
 export const resetTestData = async () => {
   const context = await request.newContext({
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
   });
 
   // 모든 이벤트 조회
@@ -37,7 +37,7 @@ export const resetTestData = async () => {
  */
 export const createTestEvent = async (event: EventForm) => {
   const context = await request.newContext({
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
   });
 
   const response = await context.post('/api/events', {
@@ -60,7 +60,7 @@ export const createTestEvent = async (event: EventForm) => {
  */
 export const getAllEvents = async () => {
   const context = await request.newContext({
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
   });
 
   const response = await context.get('/api/events');
@@ -83,7 +83,7 @@ export const seedTestData = async (fixtureName: FixtureName): Promise<Event[]> =
   const fixtureData: TestFixture = JSON.parse(fixtureContent);
 
   const context = await request.newContext({
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
   });
 
   const createdEvents: Event[] = [];
@@ -133,7 +133,7 @@ export const updateTestEvent = async (
   partialData: Partial<EventForm>
 ): Promise<Event> => {
   const context = await request.newContext({
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
   });
 
   // 기존 이벤트 조회
@@ -171,7 +171,7 @@ export const updateTestEvent = async (
  */
 export const deleteTestEvent = async (id: string): Promise<void> => {
   const context = await request.newContext({
-    baseURL: 'http://localhost:5173',
+    baseURL: 'http://localhost:3000',
   });
 
   const response = await context.delete(`/api/events/${id}`);

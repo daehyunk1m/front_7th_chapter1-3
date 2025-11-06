@@ -822,11 +822,13 @@ function App() {
           {isRepeating && !editingEvent && (
             <Stack spacing={2}>
               <FormControl fullWidth>
-                <FormLabel>반복 유형</FormLabel>
+                <FormLabel id="repeat-type-label">반복 유형</FormLabel>
                 <Select
+                  labelId="repeat-type-label"
+                  aria-label="반복 유형"
+                  id="repeat-type"
                   size="small"
                   value={repeatType}
-                  aria-label="반복 유형"
                   onChange={(e) => setRepeatType(e.target.value as RepeatType)}
                 >
                   <MenuItem value="daily" aria-label="daily-option">

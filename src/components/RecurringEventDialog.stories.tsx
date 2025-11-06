@@ -1,7 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import RecurringEventDialog from './RecurringEventDialog';
-import { Event } from '../types';
 
 /**
  * Meta information for the RecurringEventDialog component stories

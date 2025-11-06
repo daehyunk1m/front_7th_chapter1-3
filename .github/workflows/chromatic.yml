@@ -1,0 +1,73 @@
+name: Chromatic
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Storybook
+        run: pnpm build-storybook
+
+      - name: Load CHROMATIC_PROJECT_TOKEN from .env (if present)
+        id: load-env
+        shell: bash
+        run: |
+          if [ -f .env ]; then
+            VALUE=$(grep -E '^CHROMATIC_PROJECT_TOKEN=' .env | head -n1 | cut -d '=' -f2-)
+            if [ -n "$VALUE" ]; then
+              echo "CHROMATIC_PROJECT_TOKEN=$VALUE" >> "$GITHUB_ENV"
+              echo "loaded=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "loaded=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo ".env not found"
+            echo "loaded=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to Chromatic (runs only if token is provided)
+        uses: chromaui/action@latest
+        if: env.CHROMATIC_PROJECT_TOKEN != ''
+        with:
+          projectToken: ${{ env.CHROMATIC_PROJECT_TOKEN }}
+          #run: npx chromatic --exit-once-uploaded
+          storybookBuildDir: ./storybook-static
+          exitZeroOnChanges: true
