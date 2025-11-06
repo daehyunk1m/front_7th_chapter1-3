@@ -41,9 +41,11 @@ test.describe('일정 겹침 처리', () => {
 
     // Then: 다이얼로그가 닫히고 두 일정 모두 표시됨
     await expect(page.getByRole('dialog')).not.toBeVisible();
-    await expect(page.getByTestId('event-list')).toContainText('회의 A');
-    await expect(page.getByTestId('event-list')).toContainText('새 회의');
-    await expect(page.getByTestId('event-list')).toContainText('10:30 - 11:30');
+
+    // UI 업데이트 대기 (저장 완료 및 화면 갱신까지 기다림)
+    await expect(page.getByTestId('event-list')).toContainText('회의 A', { timeout: 5000 });
+    await expect(page.getByTestId('event-list')).toContainText('새 회의', { timeout: 5000 });
+    await expect(page.getByTestId('event-list')).toContainText('10:30 - 11:30', { timeout: 5000 });
   });
 
   test('새 일정 생성 시 겹침이 감지되면 경고를 받고 "취소"를 선택하여 생성을 중단할 수 있다', async ({
@@ -99,9 +101,7 @@ test.describe('일정 겹침 처리', () => {
     await expect(page.getByTestId('event-list')).toContainText('14:00 - 15:00');
 
     // When: 회의 C를 수정하여 회의 A와 겹치게 변경 (14:00-15:00 → 10:30-11:30)
-    const eventCItem = page.locator('[data-testid="event-list"]').filter({ hasText: '회의 C' });
-
-    await eventCItem.getByRole('button', { name: 'Edit event' }).first().click();
+    await page.locator('div:has-text("회의 C") button[aria-label="Edit event"]').last().click();
     await expect(page.getByTestId('event-submit-button')).toContainText('일정 수정');
 
     // 시간 수정
@@ -144,7 +144,7 @@ test.describe('일정 겹침 처리', () => {
     await expect(originalEventC.first()).toContainText('14:00 - 15:00');
 
     // When: 회의 C를 수정하여 회의 A와 겹치게 시도 (14:00-15:00 → 09:30-10:30)
-    await originalEventC.getByRole('button', { name: 'Edit event' }).first().click();
+    await page.locator('div:has-text("회의 C") button[aria-label="Edit event"]').last().click();
     await expect(page.getByTestId('event-submit-button')).toContainText('일정 수정');
 
     // 시간 수정
@@ -165,7 +165,9 @@ test.describe('일정 겹침 처리', () => {
     // Then: 다이얼로그가 닫히고 일정이 수정되지 않음 (원래 시간 유지)
     await expect(page.getByRole('dialog')).not.toBeVisible();
 
-    const unchangedEventC = page.locator('[data-testid="event-list"]').filter({ hasText: '회의 C' });
+    const unchangedEventC = page
+      .locator('[data-testid="event-list"]')
+      .filter({ hasText: '회의 C' });
     await expect(unchangedEventC.first()).toContainText('14:00 - 15:00');
     await expect(unchangedEventC.first()).not.toContainText('09:30 - 10:30');
 

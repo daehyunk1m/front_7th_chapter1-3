@@ -16,4 +16,5 @@ export type FixtureName =
   | 'single-event'
   | 'multiple-events'
   | 'recurring-events'
-  | 'overlapping-events';
+  | 'overlapping-events'
+  | 'search-filtering-events';
