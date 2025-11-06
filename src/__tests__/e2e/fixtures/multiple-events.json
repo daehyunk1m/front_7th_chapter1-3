@@ -1,0 +1,74 @@
+{
+  "events": [
+    {
+      "title": "아침 회의",
+      "date": "2025-11-10",
+      "startTime": "09:00",
+      "endTime": "10:00",
+      "description": "일일 스탠드업 미팅",
+      "location": "회의실 A",
+      "category": "업무",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 10
+    },
+    {
+      "title": "점심 약속",
+      "date": "2025-11-10",
+      "startTime": "12:00",
+      "endTime": "13:00",
+      "description": "팀 점심",
+      "location": "레스토랑",
+      "category": "개인",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 60
+    },
+    {
+      "title": "오후 회의",
+      "date": "2025-11-10",
+      "startTime": "14:00",
+      "endTime": "15:30",
+      "description": "프로젝트 리뷰",
+      "location": "회의실 B",
+      "category": "업무",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 10
+    },
+    {
+      "title": "운동",
+      "date": "2025-11-11",
+      "startTime": "18:00",
+      "endTime": "19:00",
+      "description": "헬스장",
+      "location": "피트니스 센터",
+      "category": "개인",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 60
+    },
+    {
+      "title": "독서 모임",
+      "date": "2025-11-12",
+      "startTime": "19:00",
+      "endTime": "20:30",
+      "description": "월간 독서 토론",
+      "location": "카페",
+      "category": "기타",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 120
+    }
+  ]
+}

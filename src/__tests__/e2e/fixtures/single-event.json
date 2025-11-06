@@ -1,0 +1,18 @@
+{
+  "events": [
+    {
+      "title": "테스트 회의",
+      "date": "2025-11-15",
+      "startTime": "10:00",
+      "endTime": "11:00",
+      "description": "수정 테스트용 회의",
+      "location": "회의실 A",
+      "category": "업무",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 10
+    }
+  ]
+}

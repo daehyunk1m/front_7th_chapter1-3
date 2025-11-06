@@ -18,3 +18,5 @@ storybook-static
 
 .env
 .env.*
+
+src/__tests__/e2e/fixtures/README.md

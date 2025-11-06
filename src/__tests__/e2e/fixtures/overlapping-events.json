@@ -1,0 +1,46 @@
+{
+  "events": [
+    {
+      "title": "회의 A",
+      "date": "2025-11-15",
+      "startTime": "10:00",
+      "endTime": "11:00",
+      "description": "첫 번째 회의",
+      "location": "회의실 A",
+      "category": "업무",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 10
+    },
+    {
+      "title": "회의 B",
+      "date": "2025-11-15",
+      "startTime": "10:30",
+      "endTime": "11:30",
+      "description": "겹치는 회의 (10:30-11:00 중복)",
+      "location": "회의실 B",
+      "category": "업무",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 10
+    },
+    {
+      "title": "회의 C",
+      "date": "2025-11-15",
+      "startTime": "14:00",
+      "endTime": "15:00",
+      "description": "오후 회의 (겹치지 않음)",
+      "location": "회의실 C",
+      "category": "업무",
+      "repeat": {
+        "type": "none",
+        "interval": 0
+      },
+      "notificationTime": 10
+    }
+  ]
+}

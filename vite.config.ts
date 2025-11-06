@@ -1,63 +1,87 @@
 /// <reference types="vitest/config" />
 import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
-import { defineConfig as defineTestConfig, mergeConfig } from 'vitest/config';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
-export default mergeConfig(
-  defineConfig({
-    plugins: [react()],
-    server: {
-      proxy: {
-        '/api': {
-          target: 'http://localhost:3000',
-          changeOrigin: true,
-        },
+export default defineConfig({
+  plugins: [
+    react(),
+    // vitestPreview()
+  ],
+  resolve: {
+    conditions: ['node', 'import', 'module', 'browser', 'default'],
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
       },
     },
-    test: {
-      projects: [
-        {
-          extends: true,
-          plugins: [
-            // The plugin will run tests for the stories defined in your Storybook config
-            // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-            storybookTest({
-              configDir: path.join(dirname, '.storybook'),
-            }),
-          ],
-          test: {
-            name: 'storybook',
-            browser: {
-              enabled: true,
-              headless: true,
-              provider: 'playwright',
-              instances: [
-                {
-                  browser: 'chromium',
-                },
-              ],
-            },
-            setupFiles: ['.storybook/vitest.setup.ts'],
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/setupTests.ts',
+    include: ['src/**/*.{test,spec}.{ts,tsx}'],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/.storybook/**', '**/*.stories.tsx'],
+    coverage: {
+      reportsDirectory: './.coverage',
+      reporter: ['lcov', 'json', 'json-summary'],
+    },
+    // Storybook tests는 별도 프로젝트로 분리
+    projects: [
+      {
+        extends: true,
+        resolve: {
+          conditions: ['node', 'import'],
+          alias: {
+            'msw/node': path.resolve(dirname, 'node_modules/msw/lib/node/index.mjs'),
           },
         },
-      ],
-    },
-  }),
-  defineTestConfig({
-    test: {
-      globals: true,
-      environment: 'jsdom',
-      setupFiles: './src/setupTests.ts',
-      coverage: {
-        reportsDirectory: './.coverage',
-        reporter: ['lcov', 'json', 'json-summary'],
+        test: {
+          name: 'unit-tests',
+          globals: true,
+          environment: 'jsdom',
+          setupFiles: './src/setupTests.ts',
+          include: ['src/**/*.{test,spec}.{ts,tsx}'],
+          exclude: ['**/node_modules/**', '**/dist/**', '**/.storybook/**', '**/*.stories.tsx'],
+          server: {
+            deps: {
+              inline: ['msw'],
+            },
+          },
+        },
       },
-    },
-  })
-);
+      {
+        extends: true,
+        plugins: [
+          storybookTest({
+            configDir: path.join(dirname, '.storybook'),
+          }),
+        ],
+        test: {
+          name: 'storybook',
+          browser: {
+            enabled: true,
+            headless: true,
+            provider: 'playwright',
+            instances: [
+              {
+                browser: 'chromium',
+              },
+            ],
+          },
+          setupFiles: ['.storybook/vitest.setup.ts'],
+          include: ['**/*.stories.tsx'],
+        },
+      },
+    ],
+  },
+});
