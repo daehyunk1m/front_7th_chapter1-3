@@ -1,5 +1,15 @@
 import type { Event } from '../types';
 
+/**
+ * Storybook 시각적 회귀 테스트용 고정 기준 날짜
+ *
+ * 이 날짜는 Chromatic 스냅샷 비교 시 일관성을 보장하기 위해 고정되어 있습니다.
+ * 변경 시 모든 스토리의 시각적 스냅샷이 변경되므로 신중하게 결정해야 합니다.
+ *
+ * @constant
+ */
+export const STORYBOOK_BASE_DATE = new Date('2024-11-04T00:00:00');
+
 const splitTime = (time: string) => {
   const [start, end] = time.split('/');
   return {
@@ -8,7 +18,7 @@ const splitTime = (time: string) => {
   };
 };
 
-const baseDate = new Date('2024-11-04T00:00:00');
+const baseDate = STORYBOOK_BASE_DATE;
 
 const format = (offsetDays: number, time: string) => {
   const date = new Date(baseDate);

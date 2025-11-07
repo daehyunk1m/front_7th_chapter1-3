@@ -1,10 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { EventFormPreview } from './event-form-preview';
+import { STORYBOOK_BASE_DATE } from './sample-events';
+
+const formatDateString = (date: Date): string => {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
 
 const baseFormValues = {
   title: '팀 미팅',
-  date: '2024-11-04',
+  date: formatDateString(STORYBOOK_BASE_DATE),
   startTime: '10:00',
   endTime: '11:00',
   description: '주간 동기화 미팅',
@@ -17,7 +25,7 @@ const baseFormValues = {
 };
 
 const meta: Meta<typeof EventFormPreview> = {
-  title: 'Visual Checklist/Event Form Preview',
+  title: 'Components/EventFormPreview',
   component: EventFormPreview,
   parameters: {
     docs: {

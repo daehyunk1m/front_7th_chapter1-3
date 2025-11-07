@@ -4,7 +4,7 @@ import { OverlapDialogPreview } from './overlap-dialog-preview';
 import { calendarSampleEvents } from './sample-events';
 
 const meta: Meta<typeof OverlapDialogPreview> = {
-  title: 'Visual Checklist/Overlap Dialog Preview',
+  title: 'Components/OverlapDialogPreview',
   component: OverlapDialogPreview,
   parameters: {
     docs: {
