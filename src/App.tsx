@@ -936,6 +936,7 @@ function App() {
             <TextField
               id="search"
               size="small"
+              aria-label="일정 검색"
               placeholder="검색어를 입력하세요"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}

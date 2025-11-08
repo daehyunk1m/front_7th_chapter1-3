@@ -3,6 +3,9 @@ import { test, expect } from '@playwright/test';
 import { resetTestData, seedTestData } from './helpers/test-helpers';
 
 test.describe('기본 일정 관리 워크플로우', () => {
+  // 테스트들을 순차적으로 실행하여 데이터 간섭 방지
+  test.describe.configure({ mode: 'serial' });
+
   // beforeEach에서 모든 이벤트 삭제
   test.beforeEach(async () => await resetTestData());
 
@@ -60,9 +63,9 @@ test.describe('기본 일정 관리 워크플로우', () => {
     await seedTestData('single-event');
     await page.goto('http://localhost:5173/');
 
-    // 초기 일정 확인
-    await expect(page.getByRole('button', { name: '테스트 회의' })).toBeVisible();
-    await expect(page.getByTestId('event-list')).toContainText('테스트 회의');
+    // 초기 일정 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('테스트 회의', { timeout: 10000 });
+    await expect(page.getByRole('button', { name: '테스트 회의' }).first()).toBeVisible();
     await expect(page.getByTestId('event-list')).toContainText('2025-11-15');
     await expect(page.getByTestId('event-list')).toContainText('10:00 - 11:00');
 
@@ -71,7 +74,7 @@ test.describe('기본 일정 관리 워크플로우', () => {
       .locator('data-testid=event-list')
       .filter({ has: page.getByText('테스트 회의') });
 
-    await item.getByRole('button', { name: 'Edit event' }).click();
+    await item.getByRole('button', { name: 'Edit event' }).first().click();
     await expect(page.getByTestId('event-submit-button')).toContainText('일정 수정');
 
     // 제목 수정
@@ -123,9 +126,9 @@ test.describe('기본 일정 관리 워크플로우', () => {
     await seedTestData('single-event');
     await page.goto('http://localhost:5173/');
 
-    // 초기 일정 확인
-    await expect(page.getByRole('button', { name: '테스트 회의' })).toBeVisible();
-    await expect(page.getByTestId('event-list')).toContainText('테스트 회의');
+    // 초기 일정 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('테스트 회의', { timeout: 10000 });
+    await expect(page.getByRole('button', { name: '테스트 회의' }).first()).toBeVisible();
     await expect(page.getByTestId('event-list')).toContainText('2025-11-15');
     await expect(page.getByTestId('event-list')).toContainText('10:00 - 11:00');
 
@@ -135,7 +138,7 @@ test.describe('기본 일정 관리 워크플로우', () => {
       .filter({ has: page.getByText('테스트 회의') });
 
     // 삭제 버튼 클릭 (삭제 UI가 표시됨)
-    await item.getByRole('button', { name: 'Delete event' }).click();
+    await item.getByRole('button', { name: 'Delete event' }).first().click();
 
     // 삭제 확인 알림 표시 (Snackbar는 빠르게 사라질 수 있으므로 대기 시간 조정)
     await expect(page.getByText(/일정이 삭제되었습니다/)).toBeVisible({ timeout: 3000 });

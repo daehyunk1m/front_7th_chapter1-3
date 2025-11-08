@@ -256,7 +256,7 @@ describe('반복 일정 회귀 테스트', () => {
       await user.click(screen.getByRole('option', { name: '업무-option' }));
 
       await user.click(screen.getByLabelText('반복 일정'));
-      await user.click(within(screen.getByLabelText('반복 유형')).getByRole('combobox'));
+      await user.click(screen.getByRole('combobox', { name: '반복 유형' }));
       await user.click(screen.getByRole('option', { name: 'daily-option' }));
 
       await user.click(screen.getByTestId('event-submit-button'));

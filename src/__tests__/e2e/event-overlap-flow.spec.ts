@@ -3,6 +3,9 @@ import { test, expect } from '@playwright/test';
 import { resetTestData, seedTestData } from './helpers/test-helpers';
 
 test.describe('일정 겹침 처리', () => {
+  // 테스트들을 순차적으로 실행하여 데이터 간섭 방지
+  test.describe.configure({ mode: 'serial' });
+
   test.beforeEach(async () => await resetTestData());
   test.afterAll(async () => await resetTestData());
 
@@ -13,8 +16,8 @@ test.describe('일정 겹침 처리', () => {
     await seedTestData('overlapping-events');
     await page.goto('http://localhost:5173/');
 
-    // 기존 일정 확인
-    await expect(page.getByTestId('event-list')).toContainText('회의 A');
+    // 기존 일정 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('회의 A', { timeout: 10000 });
 
     // When: 겹치는 새 일정 생성 시도 (2025-11-15 10:30-11:30)
     await page.getByRole('textbox', { name: '제목' }).fill('새 회의');
@@ -33,7 +36,7 @@ test.describe('일정 겹침 처리', () => {
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText('일정 겹침 경고')).toBeVisible();
     await expect(dialog.getByText('다음 일정과 겹칩니다:')).toBeVisible();
-    await expect(dialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/)).toBeVisible();
+    await expect(dialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/).first()).toBeVisible();
     await expect(dialog.getByText('계속 진행하시겠습니까?')).toBeVisible();
 
     // When: "계속 진행" 버튼 클릭
@@ -55,8 +58,8 @@ test.describe('일정 겹침 처리', () => {
     await seedTestData('overlapping-events');
     await page.goto('http://localhost:5173/');
 
-    // 기존 일정 확인
-    await expect(page.getByTestId('event-list')).toContainText('회의 A');
+    // 기존 일정 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('회의 A', { timeout: 10000 });
 
     // When: 겹치는 새 일정 생성 시도 (2025-11-15 10:15-10:45)
     await page.getByRole('textbox', { name: '제목' }).fill('취소할 회의');
@@ -74,7 +77,7 @@ test.describe('일정 겹침 처리', () => {
     const cancelDialog = page.getByRole('dialog');
     await expect(cancelDialog).toBeVisible();
     await expect(cancelDialog.getByText('일정 겹침 경고')).toBeVisible();
-    await expect(cancelDialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/)).toBeVisible();
+    await expect(cancelDialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/).first()).toBeVisible();
 
     // When: "취소" 버튼 클릭
     await cancelDialog.getByRole('button', { name: '취소' }).click();
@@ -95,8 +98,8 @@ test.describe('일정 겹침 처리', () => {
     await seedTestData('overlapping-events');
     await page.goto('http://localhost:5173/');
 
-    // 기존 일정 확인
-    await expect(page.getByTestId('event-list')).toContainText('회의 A');
+    // 기존 일정 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('회의 A', { timeout: 10000 });
     await expect(page.getByTestId('event-list')).toContainText('회의 C');
     await expect(page.getByTestId('event-list')).toContainText('14:00 - 15:00');
 
@@ -114,7 +117,7 @@ test.describe('일정 겹침 처리', () => {
     const dialog = page.getByRole('dialog');
     await expect(dialog).toBeVisible();
     await expect(dialog.getByText('일정 겹침 경고')).toBeVisible();
-    await expect(dialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/)).toBeVisible();
+    await expect(dialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/).first()).toBeVisible();
 
     // When: "계속 진행" 버튼 클릭
     await dialog.getByRole('button', { name: '계속 진행' }).click();
@@ -136,8 +139,8 @@ test.describe('일정 겹침 처리', () => {
     await seedTestData('overlapping-events');
     await page.goto('http://localhost:5173/');
 
-    // 기존 일정 확인
-    await expect(page.getByTestId('event-list')).toContainText('회의 A');
+    // 기존 일정 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('회의 A', { timeout: 10000 });
     await expect(page.getByTestId('event-list')).toContainText('회의 C');
 
     const originalEventC = page.locator('[data-testid="event-list"]').filter({ hasText: '회의 C' });
@@ -157,7 +160,7 @@ test.describe('일정 겹침 처리', () => {
     const editCancelDialog = page.getByRole('dialog');
     await expect(editCancelDialog).toBeVisible();
     await expect(editCancelDialog.getByText('일정 겹침 경고')).toBeVisible();
-    await expect(editCancelDialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/)).toBeVisible();
+    await expect(editCancelDialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/).first()).toBeVisible();
 
     // When: "취소" 버튼 클릭
     await editCancelDialog.getByRole('button', { name: '취소' }).click();

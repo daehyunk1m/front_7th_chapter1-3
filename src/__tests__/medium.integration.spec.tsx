@@ -54,7 +54,7 @@ const saveSchedule = async (
 
   if (repeat) {
     await user.click(screen.getByLabelText('반복 일정'));
-    await user.click(within(screen.getByLabelText('반복 유형')).getByRole('combobox'));
+    await user.click(screen.getByRole('combobox', { name: '반복 유형' }));
     await user.click(screen.getByRole('option', { name: `${repeat.type}-option` }));
     await user.clear(screen.getByLabelText('반복 간격'));
     await user.type(screen.getByLabelText('반복 간격'), String(repeat.interval));

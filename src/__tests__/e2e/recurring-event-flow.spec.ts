@@ -58,7 +58,7 @@ test.describe('반복 일정 관리 워크플로우', () => {
 
     // When: 두 번째 인스턴스만 수정 (단일 수정)
     const eventList = page.getByTestId('event-list');
-    await expect(eventList).toContainText('주간 팀 회의');
+    await expect(eventList).toContainText('주간 팀 회의', { timeout: 10000 });
 
     // 첫 번째 일정의 수정 버튼 클릭 (주간 팀 회의 이벤트의 첫 번째)
     // 제목이 포함된 div 내의 Edit 버튼 찾기
@@ -185,7 +185,8 @@ test.describe('반복 일정 관리 워크플로우', () => {
     const dailyEvents = events.filter((e) => e.title === '일일 스탠드업');
     expect(dailyEvents.length).toBe(5); // 정확히 5일
 
-    // 캘린더에 표시 확인
+    // 캘린더에 표시 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('일일 스탠드업', { timeout: 10000 });
     await expect(page.getByRole('button', { name: '일일 스탠드업' }).first()).toBeVisible();
 
     // When: 전체 삭제
@@ -238,7 +239,8 @@ test.describe('반복 일정 관리 워크플로우', () => {
     const monthlyEvents = events.filter((e) => e.title === '월간 회고');
     expect(monthlyEvents.length).toBe(3); // 11월, 12월, 1월
 
-    // 캘린더에 표시 확인
+    // 캘린더에 표시 확인 (이벤트 로딩 대기)
+    await expect(page.getByTestId('event-list')).toContainText('월간 회고', { timeout: 10000 });
     await expect(page.getByRole('button', { name: '월간 회고' }).first()).toBeVisible();
 
     // When: 단일 수정

@@ -3,13 +3,16 @@ import { test, expect } from '@playwright/test';
 import { resetTestData, seedTestData } from './helpers/test-helpers';
 
 test.describe('검색 및 필터링', () => {
+  // 테스트들을 순차적으로 실행하여 데이터 간섭 방지
+  test.describe.configure({ mode: 'serial' });
+
   test.beforeEach(async () => await resetTestData());
   test.afterAll(async () => await resetTestData());
 
   test('사용자가 일정을 검색하고 뷰 타입에 따라 필터링된 결과를 볼 수 있다', async ({ page }) => {
     // Given: 여러 일정 생성 (제목, 설명, 위치가 다양)
     await seedTestData('search-filtering-events');
-    await page.goto('http://localhost:5173/');
+    await page.goto('/');
 
     // 페이지 로드 확인
     await expect(page.getByRole('heading', { name: '일정 추가' })).toBeVisible();
@@ -17,9 +20,8 @@ test.describe('검색 및 필터링', () => {
     // 1월로 이동 (이벤트가 2026-01에 있으므로)
     // 현재 11월 → 12월 → 1월
     await page.getByRole('button', { name: 'Next' }).click();
-    await page.waitForTimeout(300);
+    await expect(page.getByRole('heading', { name: /2025년 12월/ })).toBeVisible();
     await page.getByRole('button', { name: 'Next' }).click();
-    await page.waitForTimeout(300);
 
     // 1월인지 확인
     await expect(page.getByRole('heading', { name: /2026년 1월/ })).toBeVisible();
@@ -41,7 +43,7 @@ test.describe('검색 및 필터링', () => {
     await expect(page.getByTestId('event-list')).not.toContainText('프로젝트 마감');
 
     // And: 캘린더에도 해당 일정만 표시
-    await expect(page.getByRole('button', { name: '팀 회의' })).toBeVisible();
+    await expect(page.getByRole('button', { name: '팀 회의' }).first()).toBeVisible();
 
     // When: 검색어 지우기
     await searchInput.clear();
