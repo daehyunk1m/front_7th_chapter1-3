@@ -30,7 +30,13 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: './src/setupTests.ts',
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
-    exclude: ['**/node_modules/**', '**/dist/**', '**/.storybook/**', '**/*.stories.tsx'],
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.storybook/**',
+      '**/*.stories.tsx',
+      'src/__tests__/e2e/**', // E2E 테스트는 Playwright로만 실행
+    ],
     coverage: {
       reportsDirectory: './.coverage',
       reporter: ['lcov', 'json', 'json-summary'],
@@ -51,7 +57,13 @@ export default defineConfig({
           environment: 'jsdom',
           setupFiles: './src/setupTests.ts',
           include: ['src/**/*.{test,spec}.{ts,tsx}'],
-          exclude: ['**/node_modules/**', '**/dist/**', '**/.storybook/**', '**/*.stories.tsx'],
+          exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/.storybook/**',
+      '**/*.stories.tsx',
+      'src/__tests__/e2e/**', // E2E 테스트는 Playwright로만 실행
+    ],
           server: {
             deps: {
               inline: ['msw'],
