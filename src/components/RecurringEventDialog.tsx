@@ -7,8 +7,6 @@ import {
   Typography,
 } from '@mui/material';
 
-import { Event } from '../types';
-
 /**
  * Available operation modes for the recurring event dialog
  */
@@ -46,9 +44,7 @@ interface RecurringEventDialogProps {
   /** Callback fired when the dialog should be closed */
   onClose: () => void;
   /** Callback fired when user confirms an action */
-  onConfirm: (editSingleOnly: boolean) => void;
-  /** The event being operated on */
-  event: Event | null;
+  onConfirm: (_editSingleOnly: boolean) => void;
   /** The operation mode */
   mode?: DialogMode;
 }

@@ -1,9 +1,10 @@
 /// <reference types="vitest/config" />
-import react from '@vitejs/plugin-react-swc';
-import { defineConfig } from 'vite';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
+import react from '@vitejs/plugin-react-swc';
+import { defineConfig } from 'vite';
 
 const dirname =
   typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
@@ -58,12 +59,12 @@ export default defineConfig({
           setupFiles: './src/setupTests.ts',
           include: ['src/**/*.{test,spec}.{ts,tsx}'],
           exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/.storybook/**',
-      '**/*.stories.tsx',
-      'src/__tests__/e2e/**', // E2E 테스트는 Playwright로만 실행
-    ],
+            '**/node_modules/**',
+            '**/dist/**',
+            '**/.storybook/**',
+            '**/*.stories.tsx',
+            'src/__tests__/e2e/**', // E2E 테스트는 Playwright로만 실행
+          ],
           server: {
             deps: {
               inline: ['msw'],

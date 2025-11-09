@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-import { resetTestData, seedTestData } from './helpers/test-helpers';
+import { resetTestData } from './helpers/test-helpers';
 
 test.describe('알림 시스템', () => {
   test.beforeEach(async () => await resetTestData());
@@ -45,9 +45,9 @@ test.describe('알림 시스템', () => {
     await page.waitForTimeout(2000);
 
     // Then: 화면 우측 상단에 알림 팝업 표시 (약 1분 후 알림 트리거, 최대 65초 대기)
-    await expect(
-      page.getByText('1분 후 알림 테스트 일정 일정이 시작됩니다.')
-    ).toBeVisible({ timeout: 65000 });
+    await expect(page.getByText('1분 후 알림 테스트 일정 일정이 시작됩니다.')).toBeVisible({
+      timeout: 65000,
+    });
 
     // And: 일정 목록에서 해당 일정의 빨간색 표시 및 종 아이콘 확인
     const eventList = page.getByTestId('event-list');
@@ -63,7 +63,10 @@ test.describe('알림 시스템', () => {
     await expect(eventItem.locator('svg').first()).toBeVisible();
 
     // When: 알림 닫기 버튼 클릭
-    const alert = page.getByText('1분 후 알림 테스트 일정 일정이 시작됩니다.').locator('xpath=ancestor::div[@role="alert"]').first();
+    const alert = page
+      .getByText('1분 후 알림 테스트 일정 일정이 시작됩니다.')
+      .locator('xpath=ancestor::div[@role="alert"]')
+      .first();
     const closeButton = alert.locator('button').first();
     await closeButton.click();
 

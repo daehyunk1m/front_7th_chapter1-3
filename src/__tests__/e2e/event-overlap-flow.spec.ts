@@ -160,7 +160,9 @@ test.describe('일정 겹침 처리', () => {
     const editCancelDialog = page.getByRole('dialog');
     await expect(editCancelDialog).toBeVisible();
     await expect(editCancelDialog.getByText('일정 겹침 경고')).toBeVisible();
-    await expect(editCancelDialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/).first()).toBeVisible();
+    await expect(
+      editCancelDialog.getByText(/회의 A.*2025-11-15.*10:00-11:00/).first()
+    ).toBeVisible();
 
     // When: "취소" 버튼 클릭
     await editCancelDialog.getByRole('button', { name: '취소' }).click();
